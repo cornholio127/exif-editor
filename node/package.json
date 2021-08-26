@@ -6,30 +6,24 @@
   "author": "Mathias Haessig",
   "license": "MIT",
   "dependencies": {
-    "@treverix/custom-electron-titlebar": "4.1.7",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "styled-components": "5.3.0"
+    "@treverix/custom-electron-titlebar": "4.1.7"
   },
   "devDependencies": {
-    "@types/react": "17.0.14",
-    "@types/react-dom": "17.0.9",
-    "@types/styled-components": "5.1.11",
-    "@typescript-eslint/parser": "4.28.3",
+    "@typescript-eslint/parser": "4.29.3",
     "cross-env": "7.0.3",
-    "electron": "13.1.7",
-    "eslint": "7.31.0",
+    "electron": "13.2.2",
+    "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
-    "eslint-plugin-prettier": "3.4.0",
+    "eslint-plugin-prettier": "3.4.1",
     "html-webpack-plugin": "5.3.2",
     "prettier": "2.3.2",
-    "ts-loader": "9.2.3",
+    "ts-loader": "9.2.5",
     "typescript": "4.3.5",
-    "webpack": "5.45.1",
-    "webpack-cli": "4.7.2"
+    "webpack": "5.51.1",
+    "webpack-cli": "4.8.0"
   },
   "scripts": {
-    "build": "webpack && webpack --config webpack.main.config.js",
+    "build": "webpack",
     "start": "electron dist/main.js",
     "type-check": "yarn tsc",
     "lint": "eslint --ext .ts,.tsx ."

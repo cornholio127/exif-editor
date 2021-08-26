@@ -1,18 +1,8 @@
 import { Titlebar, Color } from '@treverix/custom-electron-titlebar';
 import { Menu, MenuItem } from '@electron/remote';
-
-console.log('preload.js is running...');
-
-const showAboutDialog = () => {
-  /*dialog.showMessageBox(window, {
-    title: 'About this application',
-    message: 'Version: 1.0.0',
-  });*/
-  console.log('about');
-};
+import { ipcRenderer } from 'electron';
 
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('DOMContentLoaded');
   const menu = new Menu();
   menu.append(
     new MenuItem({
@@ -27,7 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
         {
           label: 'About',
           click() {
-            showAboutDialog();
+            ipcRenderer.invoke('showAboutDialog');
           },
         },
       ],

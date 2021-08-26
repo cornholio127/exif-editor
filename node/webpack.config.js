@@ -1,12 +1,14 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = () => {
   return {
-    entry: './src/app/index.tsx',
+    entry: {
+      main: './src/app.ts',
+      preload: './src/preload.ts',
+    },
     output: {
-      path: path.join(__dirname, 'dist/app'),
-      filename: 'bundle.js',
+      path: path.join(__dirname, 'dist'),
+      filename: '[name].js',
     },
     devtool: 'source-map',
     module: {
@@ -21,6 +23,10 @@ module.exports = () => {
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.scss'],
     },
-    plugins: [new HtmlWebpackPlugin({ template: 'src/index.html' })],
+    target: 'electron-main',
+    node: {
+      __dirname: false,
+      __filename: false,
+    },
   };
 };

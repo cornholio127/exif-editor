@@ -1,7 +1,5 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, dialog, ipcMain } from 'electron';
 import path from 'path';
-
-const APP = 'file://' + __dirname + '/app/index.html';
 
 require('@electron/remote/main').initialize();
 
@@ -33,7 +31,7 @@ export default class Main {
       },
     });
     Main.mainWindow.webContents.openDevTools();
-    Main.mainWindow.loadURL(APP);
+    Main.mainWindow.loadURL('http://localhost:3000');
     Main.mainWindow.on('closed', Main.onClose);
   }
 
@@ -49,3 +47,10 @@ export default class Main {
     Main.application.on('ready', Main.onReady);
   }
 }
+
+ipcMain.handle('showAboutDialog', () => {
+  dialog.showMessageBox(Main.mainWindow!, {
+    title: 'About this application',
+    message: 'Version: 1.0.0',
+  });
+});
