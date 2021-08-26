@@ -1,0 +1,42 @@
+@font-face {
+  font-family: "Recursive";
+  font-style: normal;
+  font-weight: 300;
+  src:url("Recursive-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Recursive";
+  font-style: normal;
+  font-weight: 400;
+  src:url("Recursive-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Recursive";
+  font-style: normal;
+  font-weight: 500;
+  src:url("Recursive-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Recursive";
+  font-style: normal;
+  font-weight: 600;
+  src:url("Recursive-SemiBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Recursive";
+  font-style: normal;
+  font-weight: 700;
+  src:url("Recursive-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Recursive";
+  font-style: normal;
+  font-weight: 800;
+  src:url("Recursive-ExtraBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Recursive";
+  font-style: normal;
+  font-weight: 900;
+  src:url("Recursive-Black.ttf") format("truetype");
+}
