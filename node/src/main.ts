@@ -1,5 +1,6 @@
-import { BrowserWindow, dialog, ipcMain } from 'electron';
+import { BrowserWindow, globalShortcut, ipcMain } from 'electron';
 import path from 'path';
+import actions, { Actions } from './actions';
 
 require('@electron/remote/main').initialize();
 
@@ -7,6 +8,7 @@ export default class Main {
   static mainWindow?: Electron.BrowserWindow;
   static application: Electron.App;
   static BrowserWindow: typeof BrowserWindow;
+  static actions: Actions;
 
   private static onWindowAllClosed() {
     if (process.platform !== 'darwin') {
@@ -25,14 +27,20 @@ export default class Main {
       height: 600,
       frame: false,
       webPreferences: {
-        nodeIntegration: false,
+        nodeIntegration: true,
         enableRemoteModule: true,
+        contextIsolation: false,
         preload: path.join(__dirname, 'preload.js'),
       },
     });
     Main.mainWindow.webContents.openDevTools();
     Main.mainWindow.loadURL('http://localhost:3000');
     Main.mainWindow.on('closed', Main.onClose);
+    Main.actions = actions(Main.mainWindow!);
+    globalShortcut.register('CommandOrControl+O', Main.actions.openFolder);
+    ipcMain.handle('openFolder', Main.actions.openFolder);
+    ipcMain.handle('listFiles', Main.actions.listFiles);
+    ipcMain.handle('showAboutDialog', Main.actions.showAboutDialog);
   }
 
   static main(app: Electron.App, browserWindow: typeof BrowserWindow) {
@@ -47,10 +55,3 @@ export default class Main {
     Main.application.on('ready', Main.onReady);
   }
 }
-
-ipcMain.handle('showAboutDialog', () => {
-  dialog.showMessageBox(Main.mainWindow!, {
-    title: 'About this application',
-    message: 'Version: 1.0.0',
-  });
-});

@@ -7,7 +7,17 @@ window.addEventListener('DOMContentLoaded', () => {
   menu.append(
     new MenuItem({
       label: 'File',
-      submenu: [{ role: 'quit' }],
+      submenu: [
+        {
+          label: 'Open Folder...',
+          accelerator: 'CommandOrCtrl+O',
+          click: () => {
+            ipcRenderer.invoke('openFolder');
+          },
+        },
+        { type: 'separator' },
+        { role: 'quit' },
+      ],
     }),
   );
   menu.append(
@@ -16,7 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
       submenu: [
         {
           label: 'About',
-          click() {
+          click: () => {
             ipcRenderer.invoke('showAboutDialog');
           },
         },

@@ -1,4 +1,36 @@
 body {
-  font-family: "Recursive";
   margin: 0;
+}
+.titlebar {
+  font-family: "Heebo";
+  font-size: 12px;
+  font-weight: 300;
+  color: #d0d0d0!important;
+}
+.menubar {
+  font-size: 12px;
+}
+.menubar-menu-container {
+  background: #282828!important;
+}
+.menubar-menu-container .menu-item-icon {
+  width: 0!important;
+}
+.menubar-menu-container .action-menu-item {
+  background: #282828!important;
+  height: 24px!important;
+}
+.menubar-menu-container .action-menu-item:hover {
+  background: #275077!important;
+}
+.menubar-menu-container .action-item {
+  cursor: pointer;
+}
+.action-label.separator {
+  margin: 8px 10px!important;
+  border-bottom-color: #d0d0d0!important;
+}
+div#app {
+  height: 100%;
+  font-family: "Recursive";
 }

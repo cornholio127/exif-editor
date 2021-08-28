@@ -24,6 +24,12 @@ interface FdItemData extends ItemData {
   fd: FileDescriptor;
 }
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+`;
+
 const Directory = styled.div`
   display: flex;
   flex-direction: row;
@@ -32,6 +38,8 @@ const Directory = styled.div`
   padding-left: 8px;
   justify-content: space-between;
   height: 32px;
+  flex-shrink: 0;
+  flex-grow: 0;
 `;
 
 const Path = styled.span`
@@ -74,7 +82,7 @@ const FileBrowser: React.FC<Props> = ({
     }
   };
   return (
-    <div className={className}>
+    <Container className={className}>
       <Directory>
         <Path>
           {path.length > 1 && '... / '}
@@ -89,7 +97,7 @@ const FileBrowser: React.FC<Props> = ({
         selection={selection.map(toItemData)}
         onSelectionChange={handleSelectionChange}
       />
-    </div>
+    </Container>
   );
 };
 

@@ -1,13 +1,13 @@
-import { FileDescriptor } from 'components/FileBrowser';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FileBrowser } from './components';
-import PropertyEditor, { Property } from './components/PropertyEditor';
+import { useIpcEventListener } from './util';
+import { FileBrowser, FileDescriptor, PropertyEditor, Property } from './components';
+const { ipcRenderer } = window.require('electron');
 
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  height: 100%;
   background: #cc0000;
 `;
 
@@ -28,7 +28,7 @@ const Main = styled.div`
   padding: 0 16px;
 `;
 
-const mockData: FileDescriptor[] = [
+/*const mockData: FileDescriptor[] = [
   {
     name: 'image484.dng',
     path: '/',
@@ -54,7 +54,7 @@ const mockData: FileDescriptor[] = [
     path: '/',
     isDirectory: true,
   },
-];
+];*/
 
 const properties: Property[] = [
   {
@@ -71,16 +71,35 @@ const properties: Property[] = [
 
 const Editor: React.FC = () => {
   const [selection, setSelection] = useState<FileDescriptor[]>([]);
+  const [rootPath, setRootPath] = useState<string>();
   const [path, setPath] = useState<FileDescriptor[]>([]);
-  const handleDirectoryChanged = (path: FileDescriptor[]) => {
-    // TODO: change directory
-    setPath(path);
+  const [files, setFiles] = useState<FileDescriptor[]>([]);
+  useIpcEventListener(
+    'folderOpened',
+    (_event: unknown, args: unknown) => {
+      const newRootPath = args as string;
+      setRootPath(newRootPath);
+      setPath([]);
+      ipcRenderer.invoke('listFiles', [newRootPath, []]);
+    },
+    [setRootPath, setPath],
+  );
+  useIpcEventListener(
+    'filesListed',
+    (_event: unknown, args: unknown) => {
+      setFiles(args as FileDescriptor[]);
+    },
+    [setFiles],
+  );
+  const handleDirectoryChanged = (newPath: FileDescriptor[]) => {
+    setPath(newPath);
+    ipcRenderer.invoke('listFiles', [rootPath, newPath.map(p => p.name)]);
   };
   return (
     <Container>
       <Left>
         <FileBrowser
-          files={mockData}
+          files={files}
           selection={selection}
           onSelectionChange={setSelection}
           path={path}

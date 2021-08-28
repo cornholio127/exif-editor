@@ -11,7 +11,10 @@ interface Props {
   onSelectionChange?: (items: ItemData[]) => void;
 }
 
-const Container = styled.div``;
+const Container = styled.div`
+  max-height: 100%;
+  overflow-y: auto;
+`;
 
 const List: React.FC<Props> = ({
   className,
