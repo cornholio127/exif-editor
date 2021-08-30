@@ -40,6 +40,7 @@ export default class Main {
     globalShortcut.register('CommandOrControl+O', Main.actions.openFolder);
     ipcMain.handle('openFolder', Main.actions.openFolder);
     ipcMain.handle('listFiles', Main.actions.listFiles);
+    ipcMain.handle('readMetadata', Main.actions.readMetadata);
     ipcMain.handle('showAboutDialog', Main.actions.showAboutDialog);
   }
 

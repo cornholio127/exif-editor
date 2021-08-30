@@ -1,10 +1,12 @@
 import { dialog, IpcMainInvokeEvent } from 'electron';
 import { readdir, lstat } from 'fs/promises';
 import { join } from 'path';
+import { readMetadata } from './exiftool';
 
 export interface Actions {
   openFolder: () => void;
   listFiles: (event: IpcMainInvokeEvent, args: unknown[]) => void;
+  readMetadata: (event: IpcMainInvokeEvent, args: unknown[]) => void;
   showAboutDialog: () => void;
 }
 
@@ -38,6 +40,14 @@ const actions = (mainWindow: Electron.BrowserWindow): Actions =>
           .filter(f => f.type !== 'other')
           .map(f => ({ name: f.name, path: f.path, isDirectory: f.type === 'directory' })),
       );
+    },
+    readMetadata: async (_event, args) => {
+      try {
+        const metadata = await readMetadata(join(args[0] as string, args[1] as string));
+        mainWindow.webContents.send('metadata', metadata);
+      } catch (err) {
+        console.error(err);
+      }
     },
     showAboutDialog: () => {
       dialog.showMessageBox(mainWindow, {

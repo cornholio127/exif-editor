@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useIpcEventListener } from './util';
-import { FileBrowser, FileDescriptor, PropertyEditor, Property } from './components';
+import { FileBrowser, FileDescriptor, PropertyEditor, MetadataEntry } from './components';
 const { ipcRenderer } = window.require('electron');
 
 const Container = styled.div`
@@ -28,52 +28,18 @@ const Main = styled.div`
   padding: 0 16px;
 `;
 
-/*const mockData: FileDescriptor[] = [
-  {
-    name: 'image484.dng',
-    path: '/',
-    isDirectory: false,
-  },
-  {
-    name: '20210603',
-    path: '/',
-    isDirectory: true,
-  },
-  {
-    name: 'image487.dng',
-    path: '/',
-    isDirectory: false,
-  },
-  {
-    name: 'image491.dng',
-    path: '/',
-    isDirectory: false,
-  },
-  {
-    name: '20210527',
-    path: '/',
-    isDirectory: true,
-  },
-];*/
-
-const properties: Property[] = [
-  {
-    id: '1',
-    label: 'Exposure',
-    value: '1/400',
-  },
-  {
-    id: '2',
-    label: 'Camera make',
-    value: 'Nikon',
-  },
-];
+const Footer = styled.div`
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: 16px;
+`;
 
 const Editor: React.FC = () => {
   const [selection, setSelection] = useState<FileDescriptor[]>([]);
   const [rootPath, setRootPath] = useState<string>();
   const [path, setPath] = useState<FileDescriptor[]>([]);
   const [files, setFiles] = useState<FileDescriptor[]>([]);
+  const [properties, setProperties] = useState<MetadataEntry[]>([]);
   useIpcEventListener(
     'folderOpened',
     (_event: unknown, args: unknown) => {
@@ -91,6 +57,19 @@ const Editor: React.FC = () => {
     },
     [setFiles],
   );
+  useIpcEventListener(
+    'metadata',
+    (_event: unknown, args: unknown) => {
+      setProperties(args as MetadataEntry[]);
+    },
+    [setProperties],
+  );
+  const handleSelectionChanged = (newSelection: FileDescriptor[]) => {
+    setSelection(newSelection);
+    if (newSelection.length === 1) {
+      ipcRenderer.invoke('readMetadata', [newSelection[0].path, newSelection[0].name]);
+    }
+  };
   const handleDirectoryChanged = (newPath: FileDescriptor[]) => {
     setPath(newPath);
     ipcRenderer.invoke('listFiles', [rootPath, newPath.map(p => p.name)]);
@@ -101,7 +80,7 @@ const Editor: React.FC = () => {
         <FileBrowser
           files={files}
           selection={selection}
-          onSelectionChange={setSelection}
+          onSelectionChange={handleSelectionChanged}
           path={path}
           onDirectoryChange={handleDirectoryChanged}
         />
@@ -109,6 +88,7 @@ const Editor: React.FC = () => {
       <Main>
         <h1>{selection.length === 1 && selection[0].name}</h1>
         <PropertyEditor properties={selection.length === 1 ? properties : []} />
+        <Footer></Footer>
       </Main>
     </Container>
   );

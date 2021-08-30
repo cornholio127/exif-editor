@@ -1,22 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
+import { groupBy, toPairs } from 'lodash';
+import Accordion from './Accordion';
+import AccordionItem from './AccordionItem';
 
-export interface Property {
-  id: string;
-  label: string;
+export interface MetadataEntry {
+  group: string;
+  id: number | undefined;
+  tag: string;
   value: string;
 }
 
 interface Props {
   className?: string;
-  properties: Property[];
+  properties: MetadataEntry[];
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 1000px;
-`;
 
 const Row = styled.div`
   display: flex;
@@ -25,6 +23,7 @@ const Row = styled.div`
 
 const Hr = styled.hr`
   display: flex;
+  flex-shrink: 1;
   flex-grow: 1;
   height: 1px;
   border: 0;
@@ -40,27 +39,33 @@ const Hr = styled.hr`
 
 const Label = styled.span`
   font-size: 14px;
+  font-weight: 300;
   width: 400px;
 `;
 
 const Value = styled.span`
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 400;
 `;
 
 const PropertyEditor: React.FC<Props> = ({ className, properties }) => {
+  const groups = toPairs(groupBy(properties, p => p.group));
   return (
-    <Container className={className}>
-      {properties.map((p, i) => (
-        <React.Fragment key={p.id}>
-          {i > 0 && <Hr />}
-          <Row>
-            <Label>{p.label}</Label>
-            <Value>{p.value}</Value>
-          </Row>
-        </React.Fragment>
+    <Accordion className={className}>
+      {groups.map(([group, items], i) => (
+        <AccordionItem key={i} title={group}>
+          {items.map((item, j) => (
+            <React.Fragment key={j}>
+              {j > 0 && <Hr />}
+              <Row>
+                <Label>{item.tag}</Label>
+                <Value>{item.value}</Value>
+              </Row>
+            </React.Fragment>
+          ))}
+        </AccordionItem>
       ))}
-    </Container>
+    </Accordion>
   );
 };
 
